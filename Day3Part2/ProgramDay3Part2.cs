@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,7 +14,7 @@ namespace Day3Part2
         private static void Main()
         {
             var sb = new StringBuilder();
-            using (var sr = new StreamReader("D:\\Test\\day3part1.txt"))
+            using (var sr = new StreamReader("C:\\Users\\Igor\\Documents\\day3.txt"))
             {
                 string line;
                 while ((line = sr.ReadLine()) != null)
@@ -55,12 +58,47 @@ namespace Day3Part2
             var Crosses = 0;
             foreach (var position in santa.Track)
             {
-                if (roboSanta.Track.Any(p => p.X == position.X & p.Y == position.Y))
+                if (roboSanta.Track.Any(p => p.X == position.X && p.Y == position.Y))
                 {
-                    roboSanta.Track.RemoveAll(p => p.X == position.X & p.Y == position.Y);
-                    Crosses++;
+                    //var res = roboSanta.Track.RemoveAll(p => p.X == position.X & p.Y == position.Y);
+                    //Crosses++;
+                    Crosses -= 1;
                 }
+                Crosses += 2;
             }
+
+            var union = santa.Track.Union(roboSanta.Track).ToList();
+            return;
+
+            // Draw path track
+            var bitmap = new Bitmap(200, 200, PixelFormat.Format32bppArgb);
+
+            var minX = Math.Abs(santa.Track.Min(p => p.X));
+            var minY = Math.Abs(santa.Track.Min(p => p.Y));
+            var listOfX = santa.Track.Select(p => p.X + minX).ToList();
+            var listOfY = santa.Track.Select(p => p.Y + minY).ToList();
+            
+            for (var i = 0; i < listOfX.Count; i++)
+            {
+                bitmap.SetPixel(listOfX[i], listOfY[i], Color.Black);
+            }
+
+            minX = Math.Abs(roboSanta.Track.Min(p => p.X));
+            minY = Math.Abs(roboSanta.Track.Min(p => p.Y));
+            listOfX = roboSanta.Track.Select(p => p.X + minX).ToList();
+            listOfY = roboSanta.Track.Select(p => p.Y + minY).ToList();
+
+            for (var i = 0; i < listOfX.Count; i++)
+            {
+                bitmap.SetPixel(listOfX[i], listOfY[i], Color.Red);
+            }
+
+            bitmap.Save("C:\\Users\\Igor\\Documents\\img.jpg", ImageFormat.Png);
+
+            //Bitmap bitmap = new Bitmap(Convert.ToInt32(1024), Convert.ToInt32(1024), PixelFormat.Format32bppArgb);
+            //var g = Graphics.FromImage(bitmap);
+            //bitmap.SetPixel(Xcount, Ycount, Color.Black);
+            //bitmap.Save("C:\\Users\\Igor\\Documents\\img.jpg", ImageFormat.Png);
 
             Console.WriteLine("Santa bring presents to " + santa.Track.Count + " houses. Crosses " + santa.Crosses);
             Console.WriteLine("Robo-Santa bring presents to " + (roboSanta.Track.Count - 1) + " houses. Crosses " + roboSanta.Crosses);
@@ -69,7 +107,7 @@ namespace Day3Part2
         }
     }
 
-    internal class Position
+    internal class Position : IEquatable<Position>
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -78,6 +116,26 @@ namespace Day3Part2
         {
             X = x;
             Y = y;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as Position);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (X*397) ^ Y;
+            }
+        }
+
+        public bool Equals(Position other)
+        {
+            if (other == null) return false;
+
+            return X.Equals(other.X) && Y.Equals(other.Y);
         }
     }
 
