@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -55,20 +54,7 @@ namespace Day3Part2
                 whoMove = !whoMove;
             }
 
-            var Crosses = 0;
-            foreach (var position in santa.Track)
-            {
-                if (roboSanta.Track.Any(p => p.X == position.X && p.Y == position.Y))
-                {
-                    //var res = roboSanta.Track.RemoveAll(p => p.X == position.X & p.Y == position.Y);
-                    //Crosses++;
-                    Crosses -= 1;
-                }
-                Crosses += 2;
-            }
-
             var union = santa.Track.Union(roboSanta.Track).ToList();
-            return;
 
             // Draw path track
             var bitmap = new Bitmap(200, 200, PixelFormat.Format32bppArgb);
@@ -120,15 +106,7 @@ namespace Day3Part2
 
         public override bool Equals(object obj)
         {
-            return this.Equals(obj as Position);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return (X*397) ^ Y;
-            }
+            return Equals(obj as Position);
         }
 
         public bool Equals(Position other)
@@ -136,6 +114,14 @@ namespace Day3Part2
             if (other == null) return false;
 
             return X.Equals(other.X) && Y.Equals(other.Y);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (X * 397) ^ Y;
+            }
         }
     }
 
