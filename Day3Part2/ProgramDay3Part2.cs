@@ -54,7 +54,7 @@ namespace Day3Part2
                 whoMove = !whoMove;
             }
 
-            var union = santa.Track.Union(roboSanta.Track).ToList();
+            var visitedHouses = santa.Track.Union(roboSanta.Track).ToList();
 
             // Draw path track
             var bitmap = new Bitmap(200, 200, PixelFormat.Format32bppArgb);
@@ -86,9 +86,7 @@ namespace Day3Part2
             //bitmap.SetPixel(Xcount, Ycount, Color.Black);
             //bitmap.Save("C:\\Users\\Igor\\Documents\\img.jpg", ImageFormat.Png);
 
-            Console.WriteLine("Santa bring presents to " + santa.Track.Count + " houses. Crosses " + santa.Crosses);
-            Console.WriteLine("Robo-Santa bring presents to " + (roboSanta.Track.Count - 1) + " houses. Crosses " + roboSanta.Crosses);
-            Console.WriteLine("Together they visited " + (santa.Track.Count + roboSanta.Track.Count - 1));
+            Console.WriteLine("Together they visited " + visitedHouses.Count);
             Console.ReadLine();
         }
     }
