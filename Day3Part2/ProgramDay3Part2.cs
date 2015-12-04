@@ -12,17 +12,20 @@ namespace Day3Part2
     {
         private static void Main()
         {
-            var sb = new StringBuilder();
-            using (var sr = new StreamReader("C:\\Users\\Igor\\Documents\\day3.txt"))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    sb.AppendLine(line);
-                }
-            }
-            var allines = sb.ToString();
-            allines = allines.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
+            var path = "D:\\Test\\day3.txt";
+            var allines = File.ReadAllText(path);
+
+            //var sb = new StringBuilder();
+            //using (var sr = new StreamReader("C:\\Users\\Igor\\Documents\\day3.txt"))
+            //{
+            //    string line;
+            //    while ((line = sr.ReadLine()) != null)
+            //    {
+            //        sb.AppendLine(line);
+            //    }
+            //}
+            //var allines = sb.ToString();
+            //allines = allines.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
 
             var santa = new Santa();
             var roboSanta = new RoboSanta();
@@ -54,39 +57,36 @@ namespace Day3Part2
                 whoMove = !whoMove;
             }
 
-            var visitedHouses = santa.Track.Union(roboSanta.Track).ToList();
+            //var visitedHouses = santa.Track.Union(roboSanta.Track).ToList();
 
-            // Draw path track
-            var bitmap = new Bitmap(200, 200, PixelFormat.Format32bppArgb);
+            var visitedHouses = santa.Track.Concat(roboSanta.Track).Distinct().ToList();
 
-            var minX = Math.Abs(santa.Track.Min(p => p.X));
-            var minY = Math.Abs(santa.Track.Min(p => p.Y));
-            var listOfX = santa.Track.Select(p => p.X + minX).ToList();
-            var listOfY = santa.Track.Select(p => p.Y + minY).ToList();
+            //// Draw path track
+            //var bitmap = new Bitmap(200, 200, PixelFormat.Format32bppArgb);
+
+            //var minX = Math.Abs(santa.Track.Min(p => p.X));
+            //var minY = Math.Abs(santa.Track.Min(p => p.Y));
+            //var listOfX = santa.Track.Select(p => p.X + minX).ToList();
+            //var listOfY = santa.Track.Select(p => p.Y + minY).ToList();
             
-            for (var i = 0; i < listOfX.Count; i++)
-            {
-                bitmap.SetPixel(listOfX[i], listOfY[i], Color.Black);
-            }
+            //for (var i = 0; i < listOfX.Count; i++)
+            //{
+            //    bitmap.SetPixel(listOfX[i], listOfY[i], Color.Black);
+            //}
 
-            minX = Math.Abs(roboSanta.Track.Min(p => p.X));
-            minY = Math.Abs(roboSanta.Track.Min(p => p.Y));
-            listOfX = roboSanta.Track.Select(p => p.X + minX).ToList();
-            listOfY = roboSanta.Track.Select(p => p.Y + minY).ToList();
+            //minX = Math.Abs(roboSanta.Track.Min(p => p.X));
+            //minY = Math.Abs(roboSanta.Track.Min(p => p.Y));
+            //listOfX = roboSanta.Track.Select(p => p.X + minX).ToList();
+            //listOfY = roboSanta.Track.Select(p => p.Y + minY).ToList();
 
-            for (var i = 0; i < listOfX.Count; i++)
-            {
-                bitmap.SetPixel(listOfX[i], listOfY[i], Color.Red);
-            }
+            //for (var i = 0; i < listOfX.Count; i++)
+            //{
+            //    bitmap.SetPixel(listOfX[i], listOfY[i], Color.Red);
+            //}
 
-            bitmap.Save("C:\\Users\\Igor\\Documents\\img.jpg", ImageFormat.Png);
-
-            //Bitmap bitmap = new Bitmap(Convert.ToInt32(1024), Convert.ToInt32(1024), PixelFormat.Format32bppArgb);
-            //var g = Graphics.FromImage(bitmap);
-            //bitmap.SetPixel(Xcount, Ycount, Color.Black);
             //bitmap.Save("C:\\Users\\Igor\\Documents\\img.jpg", ImageFormat.Png);
-
-            Console.WriteLine("Together they visited " + visitedHouses.Count);
+            
+            Console.WriteLine("Together they visited " + (visitedHouses.Count - 1));
             Console.ReadLine();
         }
     }
@@ -136,7 +136,6 @@ namespace Day3Part2
     internal class FairyTaleCgaracter : IMove
     {
         public List<Position> Track { get; set; }
-        public int Crosses;
 
         public Position MoveRight(Position position)
         {
@@ -172,7 +171,6 @@ namespace Day3Part2
             if (Track.Any(p => p.X == position.X & p.Y == position.Y))
             {
                 Track.RemoveAll(p => p.X == position.X & p.Y == position.Y);
-                Crosses++;
             }
 
             Track.Add(position);
