@@ -14,19 +14,7 @@ namespace Day3Part2
         {
             var path = "D:\\Test\\day3.txt";
             var allines = File.ReadAllText(path);
-
-            //var sb = new StringBuilder();
-            //using (var sr = new StreamReader("C:\\Users\\Igor\\Documents\\day3.txt"))
-            //{
-            //    string line;
-            //    while ((line = sr.ReadLine()) != null)
-            //    {
-            //        sb.AppendLine(line);
-            //    }
-            //}
-            //var allines = sb.ToString();
-            //allines = allines.Replace("\r\n", "").Replace("\r", "").Replace("\n", "");
-
+            
             var santa = new Santa();
             var roboSanta = new RoboSanta();
 
@@ -56,8 +44,6 @@ namespace Day3Part2
 
                 whoMove = !whoMove;
             }
-
-            //var visitedHouses = santa.Track.Union(roboSanta.Track).ToList();
 
             var visitedHouses = santa.Track.Concat(roboSanta.Track).Distinct().ToList();
 
