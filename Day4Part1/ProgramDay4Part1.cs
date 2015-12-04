@@ -10,7 +10,7 @@ namespace Day4Part1
         private static void Main()
         {
             const string secret = "ckczppom";
-            const string pattern = @"^000000";
+            const string pattern = @"^00000"; // replace with @"^000000" for part two  
 
             using (var md5 = MD5.Create())
             {
